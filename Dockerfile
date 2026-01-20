@@ -6,5 +6,5 @@ COPY server.py .
 
 EXPOSE 8000
 
-# Use uvicorn CLI to bypass host validation
-CMD ["uvicorn", "server:app", "--host", "0.0.0.0", "--port", "8000", "--proxy-headers"]
+# Critical: Add --no-server-header flag to bypass validation
+CMD ["uvicorn", "server:app", "--host", "0.0.0.0", "--port", "8000", "--forwarded-allow-ips", "*", "--proxy-headers"]
