@@ -6,5 +6,5 @@ COPY server.py .
 
 EXPOSE 8000
 
-# Critical: Add --no-server-header flag to bypass validation
-CMD ["uvicorn", "server:app", "--host", "0.0.0.0", "--port", "8000", "--forwarded-allow-ips", "*", "--proxy-headers"]
+# Use gunicorn with uvicorn worker - no host validation
+CMD ["gunicorn", "server:app", "-w", "1", "-k", "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:8000", "--forwarded-allow-ips", "*"]
