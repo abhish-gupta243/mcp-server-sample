@@ -8,17 +8,16 @@ import uvicorn
 mcp = FastMCP("OpenShift-Helper")
 
 @mcp.tool()
-def get_cluster_status() -> str:
-    """Returns a simple status message from the cluster."""
-    return "The mcp server is working."
+def get_status(): 
+    return "The mcp server is running on OpenShift!"
 
 app = Starlette(
-    debug=True,
     routes=[
         Mount("/", app=mcp.sse_app()), 
     ]
 )
 
+# 3. Add standard CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -27,5 +26,10 @@ app.add_middleware(
 )
 
 if __name__ == "__main__":
-    # Use the 'app' instance, not 'mcp.run()'
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(
+        app, 
+        host="0.0.0.0", 
+        port=8000, 
+        proxy_headers=True, 
+        forwarded_allow_ips="*"
+    )
