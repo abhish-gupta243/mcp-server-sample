@@ -3,6 +3,7 @@ from starlette.applications import Starlette
 from starlette.middleware.cors import CORSMiddleware
 from starlette.routing import Mount
 import uvicorn
+import os
 
 # 1. Initialize FastMCP
 mcp = FastMCP("OpenShift-Helper")
@@ -17,7 +18,7 @@ app = Starlette(
     ]
 )
 
-# 3. Add standard CORS
+# Add standard CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -26,10 +27,10 @@ app.add_middleware(
 )
 
 if __name__ == "__main__":
+    # Run using module:app notation to bypass host validation
     uvicorn.run(
-        app, 
+        "server:app",
         host="0.0.0.0", 
-        port=8000, 
-        proxy_headers=True, 
-        forwarded_allow_ips="*"
+        port=8000,
+        proxy_headers=True
     )
